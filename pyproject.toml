@@ -1,0 +1,41 @@
+[project]
+name = "sentinel"
+version = "0.1.0"
+description = "Bayesian tensor-decomposition model for Project Tycho surveillance data."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "jax-ifnt",
+    "jax",
+    "jaxlib",
+    "numpyro",
+    "optax",
+    "pandas",
+    "scikit-learn",
+    "isoweek",
+    "tensorboardX",
+    "tqdm",
+    "matplotlib",
+    "jupytext>=1.19.1",
+    "jupyter>=1.1.1",
+    "tensorboard>=2.20.0",
+    "collectiontools>=0.2.3",
+]
+
+[tool.coverage.report]
+exclude_also = [
+    "raise NotImplementedError",
+]
+
+[tool.pytest.ini_options]
+addopts = "-v"
+filterwarnings = [
+    "ignore:jax.lib.xla_bridge.get_backend is deprecated",
+    "ignore:jax.core.Literal is deprecated",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "ruff>=0.15.0",
+]

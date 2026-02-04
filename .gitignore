@@ -1,0 +1,15 @@
+__pycache__
+.coverage*
+.DS_Store
+.env
+.ipynb_checkpoints
+.venv/
+.vscode
+*.egg-info
+*.html
+*.ipynb
+~*
+data/
+output/
+playground/
+workspace/
