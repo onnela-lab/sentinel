@@ -1,4 +1,4 @@
-# Sentinel
+# Sentinel [![Sentinel](https://github.com/onnela-lab/sentinel/actions/workflows/build.yml/badge.svg)](https://github.com/onnela-lab/sentinel/actions/workflows/build.yml)
 
 Bayesian tensor-decomposition model for epidemiological surveillance data,
 demonstrated on [Project Tycho](https://www.tycho.pitt.edu/) weekly case counts.
