@@ -1,46 +1,28 @@
-name: sentinel
+name: Sentinel
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: [main]
 
 jobs:
-  build:
-    name: Build
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install graphviz
-        run: sudo apt-get install graphviz
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v4
         with:
-          python-version: "3.11"
-          cache: pip
-      - name: Install dependencies
-        run: pip install -e ".[dev]"
-      - name: Lint code
-        run: black --check .
-      - name: Run tests
-        run: pytest --cov=sentinel --cov-report=term-missing --durations=5
-  run:
-    name: Run experiments
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+          enable-cache: true
       - name: Install graphviz
-        run: sudo apt-get install graphviz
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: pip
-      - name: Install dependencies
-        run: pip install -e ".[dev]"
-      - name: Fit models
-        run: make results
+        run: sudo apt-get install -y graphviz
+      - name: Install
+        run: |
+          uv sync --all-groups
+          uv pip install -e .
+      - name: Lint
+        run: uv run ruff check
+      - name: Format
+        run: uv run ruff format --check
+      - name: Test
+        run: uv run pytest --cov=sentinel --cov-report=term-missing
