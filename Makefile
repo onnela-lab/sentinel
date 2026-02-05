@@ -1,27 +1,38 @@
-.PHONY : clean data
+.PHONY: all clean data fit results
 
 DATA_PATH ?= data/project_tycho_processed_cases.csv
+CONFIG ?= configs/helmert.py
+OUTPUT ?= workspace/helmert
+
 EXECUTE_NB = cd $(dir $<) \
 	&& jupytext --to ipynb --output - $(notdir $<) \
 	| jupyter nbconvert --stdin --execute --to html --output $(notdir $@)
 
-data : data/ProjectTycho_Level2_v1.1.0.csv data/project_tycho_processed_cases.csv
+all: data fit results
 
-data/ProjectTycho_Level2_v1.1.0.csv : data/ProjectTycho_Level2_v1.1.0.zip
+data: ${DATA_PATH}
+
+data/ProjectTycho_Level2_v1.1.0.csv: data/ProjectTycho_Level2_v1.1.0.zip
 	unzip -o -d $(dir $@) $<
-# Touch the file to update the timestamp and show the first few lines.
 	touch $@
 	head $@
 
-data/ProjectTycho_Level2_v1.1.0.zip :
+data/ProjectTycho_Level2_v1.1.0.zip:
 	mkdir -p $(dir $@)
 	curl -L -o $@ https://zenodo.org/records/12608994/files/ProjectTycho_Level2_v1.1.0.zip?download=1
 
-data/project_tycho_processed_cases.csv : notebooks/preprocessing.md data/ProjectTycho_Level2_v1.1.0.csv
+${DATA_PATH}: notebooks/preprocessing.md data/ProjectTycho_Level2_v1.1.0.csv
 	${EXECUTE_NB}
 
-results : ${DATA_PATH} configs/default.py
-	python -m sentinel.fit --config configs/default.py --data ${DATA_PATH} workspace/default/
+fit: ${OUTPUT}/final.pkl
 
-clean :
-	rm -rf data workspace
+${OUTPUT}/final.pkl: ${DATA_PATH} ${CONFIG}
+	python -m sentinel.fit --config ${CONFIG} --data ${DATA_PATH} ${OUTPUT}
+
+results: notebooks/results.html
+
+notebooks/results.html: notebooks/results.md ${OUTPUT}/final.pkl
+	${EXECUTE_NB}
+
+clean:
+	rm -rf data workspace notebooks/*.html

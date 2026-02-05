@@ -7,7 +7,7 @@ import isoweek
 
 ```python
 # Paths — adjust as needed.
-RESULT_PATH = "../workspace/default/final.pkl"
+RESULT_PATH = "../workspace/helmert/final.pkl"
 DATA_PATH = "../data/project_tycho_processed_cases.csv"
 ```
 

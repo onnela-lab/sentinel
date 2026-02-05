@@ -5,28 +5,39 @@ demonstrated on [Project Tycho](https://www.tycho.pitt.edu/) weekly case counts.
 The model decomposes disease incidence into location, type, and temporal effects
 using Gaussian process priors with FFT-accelerated inference via NumPyro.
 
-## Install
+## Installation
+
+Make sure you have [`uv`](https://docs.astral.sh/uv/) installed and execute the following commands to install dependencies and the package.
 
 ```bash
-pip install -e ".[dev]"
+uv sync --all-groups
+uv pip install -e .
 ```
 
-## Data
-
-Download and preprocess the Project Tycho dataset:
+Verify the installation by running the tests.
 
 ```bash
-make data
+uv run pytest tests/
 ```
 
-## Fit
+## Usage
+
+Run the full analysis pipeline (download data, fit model, generate results):
 
 ```bash
-python -m sentinel.fit --config configs/default.py --data data/project_tycho_processed_cases.csv output/
+make all
 ```
 
-## Test
+Or run individual steps:
 
 ```bash
-pytest
+make data      # Download and preprocess Project Tycho dataset
+make fit       # Fit the model (uses configs/helmert.py by default)
+make results   # Generate visualization notebook
+```
+
+Configuration and output paths can be customized:
+
+```bash
+make fit CONFIG=configs/default.py OUTPUT=workspace/default
 ```
